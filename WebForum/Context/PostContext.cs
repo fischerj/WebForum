@@ -10,6 +10,16 @@ namespace WebForum.Context
 {
     class PostContext : DbContext
     {
+
+        public PostContext() : base("PostContext")
+        {
+            Database.SetInitializer<PostContext>(new CreateDatabaseIfNotExists<PostContext>());
+
+            //Database.SetInitializer<PostContext>(new DropCreateDatabaseIfModelChanges<PostContext>());
+            //Database.SetInitializer<PostContext>(new DropCreateDatabaseAlways<PostContext>());
+            //Database.SetInitializer<PostContext>(new PostInitializer());
+        }
+
         public DbSet<Post> Posts { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using WebForum.Context;
 
 namespace WebForum
 {
+
     public class MvcApplication : System.Web.HttpApplication
     {
         protected void Application_Start()
@@ -18,8 +19,7 @@ namespace WebForum
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            Database.SetInitializer<TopicContext>(null);
-            Database.SetInitializer<PostContext>(null);
         }
     }
+    
 }

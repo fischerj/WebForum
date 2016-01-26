@@ -13,11 +13,13 @@ namespace WebForum.Controllers
 {
     public class TopicController : Controller
     {
-        readonly TopicContext db = new TopicContext();
+
+        private TopicContext db = new TopicContext();
         // GET: Topic
         public ActionResult Index()
         {
             //ViewData["Topical"] = db.Topics.ToList();
+
             return View(db.Topics.ToList());
         }
 

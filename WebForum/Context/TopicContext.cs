@@ -10,6 +10,15 @@ namespace WebForum.Context
 {
     public class TopicContext : DbContext
     {
+        public TopicContext() : base("TopicContext")
+        {
+            Database.SetInitializer<TopicContext>(new CreateDatabaseIfNotExists<TopicContext>());
+
+            //Database.SetInitializer<TopicContext>(new DropCreateDatabaseIfModelChanges<TopicContext>());
+            //Database.SetInitializer<TopicContext>(new DropCreateDatabaseAlways<TopicContext>());
+            //Database.SetInitializer<TopicContext>(new TopicInitializer());
+        }
+
         public DbSet<Topic> Topics { get; set; }
     }
 }
