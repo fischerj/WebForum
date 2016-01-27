@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
@@ -82,5 +83,11 @@ namespace WebForum.Models
     {
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
+    }
+
+    class TopicPostViewModel
+    {
+        public IEnumerable<Topic> Topics { get; set; }
+        public IEnumerable<Post> Posts { get; set; }
     }
 }

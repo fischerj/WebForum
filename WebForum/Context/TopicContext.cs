@@ -14,7 +14,7 @@ namespace WebForum.Context
         {
             Database.SetInitializer<TopicContext>(new CreateDatabaseIfNotExists<TopicContext>());
 
-            //Database.SetInitializer<TopicContext>(new DropCreateDatabaseIfModelChanges<TopicContext>());
+            Database.SetInitializer<TopicContext>(new DropCreateDatabaseIfModelChanges<TopicContext>());
             //Database.SetInitializer<TopicContext>(new DropCreateDatabaseAlways<TopicContext>());
             //Database.SetInitializer<TopicContext>(new TopicInitializer());
         }

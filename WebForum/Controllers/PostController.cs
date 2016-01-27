@@ -14,16 +14,19 @@ namespace WebForum.Controllers
     public class PostController : Controller
     {
         readonly PostContext db = new PostContext();
+        readonly TopicContext Tdb = new TopicContext();
         // GET: Post
-        public ActionResult Index()
+        public ActionResult Index(Guid topicid)
         {
+            
             return View(db.Posts.ToList());
         }
 
         // GET: Post/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(Guid id)
         {
-            return View();
+            Post post = db.Posts.Find(id);
+            return View(post);
         }
 
         // GET: Post/Create
@@ -35,15 +38,17 @@ namespace WebForum.Controllers
 
         // POST: Post/Create
         [HttpPost]
-        public ActionResult Create(Post post, Topic topic)
+        public ActionResult Create(Post post, Guid topicid)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    post.TopicId = topicid;
                     db.Posts.Add(post);
+                    
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", post.Id);
                 }
                 return View(post);
             }
@@ -54,20 +59,30 @@ namespace WebForum.Controllers
         }
 
         // GET: Post/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid? id)
         {
-            return View();
+           if(id==null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            Post post = db.Posts.Find(id);
+            if(post==null)
+                return HttpNotFound();
+            return View(post);
         }
 
         // POST: Post/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(Post post)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(post).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(post);
             }
             catch
             {

@@ -20,27 +20,35 @@ namespace WebForum.Models
         public string Name { get; set; }
 
         [BindNever]
+        [ScaffoldColumn(false)]
         public int Version { get; set; }
 
         [BindNever]
+        [ScaffoldColumn(false)]
         public DateTime LastUpdated { get; set; }
 
         [BindNever]
+        [ScaffoldColumn(false)]
         public bool Deleted { get; set; }
 
         [BindNever]
+        [ScaffoldColumn(false)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime Date { get; set; }
         
         
         public string Body { get; set; }
-        
-        [BindNever]
-        [ForeignKey("Topic")]
-        public Guid TopicId { get; set; }
-        
-        public virtual Topic Topic { get; set; }
 
+
+        //[ForeignKey("Topic")]
+        //[BindNever]
+        //[ScaffoldColumn(false)]
+        //public Guid TopicId { get; set; }
+
+        //[ForeignKey("TopicId")]
+        [InverseProperty("Id")]
+        public virtual Guid TopicId { get; set; }
+    
         public string Description { get; set; }
 
         public Post()
