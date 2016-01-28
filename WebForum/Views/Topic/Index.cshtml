@@ -27,7 +27,7 @@
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.Id })
             @Html.ActionLink("Post Details", "Details", "Post", new { id = item.Id }, null)
-            @Html.ActionLink("Post Create", "Create", "Post", new { id = item.Id }, null)
+            @Html.ActionLink("Post Create", "Create", "Post", new { TopicId = item.Id }, null)
         </td>
     </tr>
 }

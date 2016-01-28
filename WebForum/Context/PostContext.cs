@@ -8,7 +8,7 @@ using WebForum.Models;
 
 namespace WebForum.Context
 {
-    class PostContext : DbContext
+    public class PostContext : DbContext
     {
 
         public PostContext() : base("PostContext")

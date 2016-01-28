@@ -39,15 +39,8 @@ namespace WebForum.Models
         
         public string Body { get; set; }
 
-
-        //[ForeignKey("Topic")]
-        //[BindNever]
-        //[ScaffoldColumn(false)]
-        //public Guid TopicId { get; set; }
-
-        //[ForeignKey("TopicId")]
-        [InverseProperty("Id")]
-        public virtual Guid TopicId { get; set; }
+        [ScaffoldColumn(false)]
+        public Guid TopicId { get; set; }
     
         public string Description { get; set; }
 

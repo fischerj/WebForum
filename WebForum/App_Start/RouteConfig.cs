@@ -15,8 +15,8 @@ namespace WebForum
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Topic", action = "Index", id = UrlParameter.Optional }
+                url: "{controller}/{action}/{identifier}",
+                defaults: new { controller = "Topic", action = "Index", identifier = UrlParameter.Optional }
             );
         }
     }

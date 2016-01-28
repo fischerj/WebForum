@@ -33,18 +33,22 @@ namespace WebForum.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return View(new Post());
+            return View();
         }
 
         // POST: Post/Create
         [HttpPost]
-        public ActionResult Create(Post post, Guid topicid)
+        public ActionResult Create(Post post, Guid TopicId)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    post.TopicId = topicid;
+                    //Topic topic = Tdb.Topics.Find(name);
+                    //Guid topicId = topic.Id;
+                    //post.TopicId = topicId;
+
+                    post.TopicId = TopicId;
                     db.Posts.Add(post);
                     
                     db.SaveChanges();
