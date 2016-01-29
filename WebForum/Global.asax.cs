@@ -19,8 +19,8 @@ namespace WebForum
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<TopicContext>());
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<PostContext>());
+            Database.SetInitializer<TopicContext>(new CreateDatabaseIfNotExists<TopicContext>());
+            Database.SetInitializer<PostContext>(new CreateDatabaseIfNotExists<PostContext>());
         }
     }
     

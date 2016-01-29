@@ -39,6 +39,7 @@ namespace WebForum.Models
         
         public string Body { get; set; }
 
+        [BindNever]
         [ScaffoldColumn(false)]
         public Guid TopicId { get; set; }
     
@@ -55,6 +56,8 @@ namespace WebForum.Models
             Date = DateTime.Now;
 
             Deleted = false;
+
+            TopicId = Guid.Empty;
         }
 
     }

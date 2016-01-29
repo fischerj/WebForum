@@ -14,12 +14,33 @@ namespace WebForum.Controllers
     public class PostController : Controller
     {
         readonly PostContext db = new PostContext();
-        readonly TopicContext Tdb = new TopicContext();
         // GET: Post
-        public ActionResult Index(Guid topicid)
+        public ActionResult Index(Guid? TopicId)
         {
-            
-            return View(db.Posts.ToList());
+            try
+            {
+                if (TopicId != null)
+                {
+
+
+                    //List<Post> postList = db.Posts.ToList();
+                    //foreach (var post in postList)
+                    //    if (post.TopicId != TopicId)
+                    //    {
+                    //        postList.Remove(post);
+                    //    }
+
+                    var post = db.Posts.Where(p => p.TopicId == TopicId);
+
+                    return View(post);
+                }
+            }
+            catch (Exception)
+            {
+
+                return View(db.Posts.ToList());
+            }
+            return View();
         }
 
         // GET: Post/Details/5
@@ -52,7 +73,7 @@ namespace WebForum.Controllers
                     db.Posts.Add(post);
                     
                     db.SaveChanges();
-                    return RedirectToAction("Details", post.Id);
+                    return RedirectToAction("Index", post.Id);
                 }
                 return View(post);
             }
