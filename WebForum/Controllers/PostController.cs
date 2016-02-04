@@ -13,6 +13,7 @@ namespace WebForum.Controllers
 {
     public class PostController : Controller
     {
+        readonly TopicContext tdb = new TopicContext();
         readonly PostContext db = new PostContext();
         // GET: Post
         public ActionResult Index(Guid? TopicId)
@@ -21,15 +22,8 @@ namespace WebForum.Controllers
             {
                 if (TopicId != null)
                 {
-
-
-                    //List<Post> postList = db.Posts.ToList();
-                    //foreach (var post in postList)
-                    //    if (post.TopicId != TopicId)
-                    //    {
-                    //        postList.Remove(post);
-                    //    }
-
+                    ViewBag.Message = "Here are all the posts for topic: "
+                        + tdb.Topics.Find(TopicId).Name;
                     var post = db.Posts.Where(p => p.TopicId == TopicId);
 
                     return View(post);
@@ -37,10 +31,11 @@ namespace WebForum.Controllers
             }
             catch (Exception)
             {
-
+                ViewBag.Message = "Error collecting the topic's posts";
                 return View(db.Posts.ToList());
             }
-            return View();
+            ViewBag.Message = "Here are all the posts";
+            return View(db.Posts.ToList());
         }
 
         // GET: Post/Details/5
@@ -52,26 +47,30 @@ namespace WebForum.Controllers
 
         // GET: Post/Create
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult Create(Guid? TopicId)
         {
+            ViewBag.HasTopicId = false;
+            ViewBag.TopicList = tdb.Topics.AsEnumerable();
+            if (TopicId != null)
+                ViewBag.HasTopicId = true;
             return View();
         }
 
         // POST: Post/Create
         [HttpPost]
-        public ActionResult Create(Post post, Guid TopicId)
+        public ActionResult Create(Post post, Guid? TopicId, string selectedTopicId)
         {
+            ViewBag.HasTopicId = false;
             try
             {
                 if (ModelState.IsValid)
                 {
-                    //Topic topic = Tdb.Topics.Find(name);
-                    //Guid topicId = topic.Id;
-                    //post.TopicId = topicId;
+                    if (TopicId != null)
+                        post.TopicId = TopicId.Value;
+                    else
+                        post.TopicId = Guid.Parse(selectedTopicId);
 
-                    post.TopicId = TopicId;
                     db.Posts.Add(post);
-                    
                     db.SaveChanges();
                     return RedirectToAction("Index", post.Id);
                 }
@@ -86,11 +85,11 @@ namespace WebForum.Controllers
         // GET: Post/Edit/5
         public ActionResult Edit(Guid? id)
         {
-           if(id==null)
+            if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             Post post = db.Posts.Find(id);
-            if(post==null)
+            if (post == null)
                 return HttpNotFound();
             return View(post);
         }
