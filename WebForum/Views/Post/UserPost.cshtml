@@ -1,5 +1,4 @@
-﻿@using System.Runtime.InteropServices.ComTypes
-@model IEnumerable<WebForum.Models.Post>
+﻿@model IEnumerable<WebForum.Models.Post>
 
 @{
     ViewBag.Title = "Index";
@@ -10,14 +9,11 @@
 
 <div class="row">
     <div class="col-md-4">
-        <h2>Create Post</h2>
         <p>
-            Time to say some stuff!
+            This is your stuff
         </p>
-        @Html.ActionLink("Create New", "Create", null, new {@class = "actionlinkbutton"})
     </div>
 </div>
-
 <table class="table">
     <tr>
         <th>
@@ -46,7 +42,9 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Display", "Display", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                 </td>
             </tr>
         }

@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.DynamicData;
 using System.Web.ModelBinding;
 
 namespace WebForum.Models
@@ -36,15 +37,23 @@ namespace WebForum.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime Date { get; set; }
         
-        
         public string Body { get; set; }
 
         [BindNever]
         [ScaffoldColumn(false)]
         public Guid TopicId { get; set; }
-    
-        public string Description { get; set; }
 
+        [BindNever]
+        [ScaffoldColumn(false)]
+        public Guid? UserId { get; set; }
+
+        public string Description { get; set; }
+        /* 
+        Properties to properly navigate through the models. 
+        Will be used to display a topic name from a post-TopicId
+        http://blog.staticvoid.co.nz/2012/7/17/entity_framework-navigation_property_basics_with_code_first
+        //public virtual ICollection<Topic> TopicListCollection { get; set; }
+        */
         public Post()
         {
             Id = Guid.NewGuid();

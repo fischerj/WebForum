@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using WebForum.Context;
 using WebForum.Models;
 
@@ -13,20 +15,29 @@ namespace WebForum.Controllers
 {
     public class TopicController : Controller
     {
+        
 
         private TopicContext db = new TopicContext();
         // GET: Topic
         public ActionResult Index()
         {
-            //ViewData["Topical"] = db.Topics.ToList();
+            
+            Session["foo"] = "bar";
+            try
+            {
+                return View(db.Topics.ToList());
+            }
+            catch (Exception)
+            {
 
-            return View(db.Topics.ToList());
+                return View(db.Topics.ToList());
+            }
         }
 
         // GET: Topic/Details/5
         public ActionResult Details(Guid? id)
         {
-            if(id == null)
+            if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             Topic topic = db.Topics.Find(id);
             if (topic == null)
@@ -64,11 +75,11 @@ namespace WebForum.Controllers
         // GET: Topic/Edit/5
         public ActionResult Edit(Guid? id)
         {
-            if(id==null)
+            if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             Topic topic = db.Topics.Find(id);
-            if(topic==null)
+            if (topic == null)
                 return HttpNotFound();
             return View(topic);
         }
@@ -81,7 +92,7 @@ namespace WebForum.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    db.Entry(topic).State= EntityState.Modified;
+                    db.Entry(topic).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -96,7 +107,7 @@ namespace WebForum.Controllers
         // GET: Topic/Delete/5
         public ActionResult Delete(Guid? id)
         {
-            if(id == null)
+            if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             Topic topic = db.Topics.Find(id);
             if (topic == null)
@@ -113,10 +124,10 @@ namespace WebForum.Controllers
                 Topic topic = new Topic();
                 if (ModelState.IsValid)
                 {
-                    if(id==null)
+                    if (id == null)
                         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                     topic = db.Topics.Find(id);
-                    if(topic==null)
+                    if (topic == null)
                         return HttpNotFound();
                     db.Topics.Remove(topic);
                     db.SaveChanges();

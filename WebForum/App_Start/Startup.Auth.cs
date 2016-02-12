@@ -58,11 +58,11 @@ namespace WebForum
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "164063626498-70las6btfkded7rr51as2j1uh15a3aav.apps.googleusercontent.com",
+                ClientSecret = "eyGkbheaEkbUX1_lw2Bbvb_b"
+            });
         }
     }
 }

@@ -21,7 +21,7 @@ namespace WebForum.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("WebForum", throwIfV1Schema: false)
         {
         }
 

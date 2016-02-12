@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using WebForum.Context;
 using WebForum.Models;
 
@@ -15,19 +17,31 @@ namespace WebForum.Controllers
     {
         readonly TopicContext tdb = new TopicContext();
         readonly PostContext db = new PostContext();
+
         // GET: Post
+        [HttpGet]
         public ActionResult Index(Guid? TopicId)
         {
+
             try
             {
-                if (TopicId != null)
+                if (Request.IsAuthenticated)
                 {
-                    ViewBag.Message = "Here are all the posts for topic: "
-                        + tdb.Topics.Find(TopicId).Name;
-                    var post = db.Posts.Where(p => p.TopicId == TopicId);
+                    // Kept losing the TopicId when browsing through Post Pages
+                    if (Session["TopicId"] != null)
+                        TopicId = (Guid)Session["TopicId"];
 
-                    return View(post);
+                    if (TopicId != null)
+                    {
+                        Session["TopicId"] = TopicId;
+                        ViewBag.Message = "Here are all the posts for topic: "
+                            + tdb.Topics.Find(TopicId).Name;
+                        var post = db.Posts.Where(p => p.TopicId == TopicId);
+                        TempData["Topics"] = tdb.Topics;
+                        return View(post);
+                    }
                 }
+
             }
             catch (Exception)
             {
@@ -39,7 +53,7 @@ namespace WebForum.Controllers
         }
 
         // GET: Post/Details/5
-        public ActionResult Details(Guid id)
+        public ActionResult Display(Guid id)
         {
             Post post = db.Posts.Find(id);
             return View(post);
@@ -51,9 +65,15 @@ namespace WebForum.Controllers
         {
             ViewBag.HasTopicId = false;
             ViewBag.TopicList = tdb.Topics.AsEnumerable();
+            if (Session["TopicId"] != null)
+                TopicId = (Guid)Session["TopicId"];
             if (TopicId != null)
+            {
+                Session["TopicId"] = TopicId;
                 ViewBag.HasTopicId = true;
+            }
             return View();
+
         }
 
         // POST: Post/Create
@@ -65,8 +85,22 @@ namespace WebForum.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (Session["TopicId"] != null)
+                        TopicId = (Guid)Session["TopicId"];
+
+                    if (Request.IsAuthenticated)
+                    {
+                        ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext()
+                            .GetUserManager<ApplicationUserManager>()
+                            .FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+                        post.UserId = Guid.Parse(user.Id);
+                    }
                     if (TopicId != null)
+                    {
+                        Session["TopicId"] = TopicId;
                         post.TopicId = TopicId.Value;
+                    }
+                        
                     else
                         post.TopicId = Guid.Parse(selectedTopicId);
 
@@ -81,7 +115,43 @@ namespace WebForum.Controllers
                 return View();
             }
         }
+        // GET
+        [HttpGet]
+        public ActionResult UserPost(Guid? TopicId)
+        {
+            try
+            {
+                if (Request.IsAuthenticated)
+                {
+                    // Kept losing the TopicId when browsing through Post Pages
+                    if (TopicId != null)
+                    {
+                        Session["TopicId"] = TopicId;
+                    }
 
+                    // Get current user Id through Owin
+                    ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext()
+                        .GetUserManager<ApplicationUserManager>()
+                        .FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+                    Guid userId = Guid.Parse(user.Id);
+
+                        ViewBag.Message = "Here are all the posts for user: "
+                            + user.Email;
+                        var post = db.Posts.Where(p => p.UserId == userId);
+
+                        return View(post);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = "Error collecting your posts because of Exception: \n " + ex;
+                return RedirectToAction("Index");
+            }
+            
+            ViewBag.Message = "You are not logged in.";
+            return RedirectToAction("Index");
+        }
         // GET: Post/Edit/5
         public ActionResult Edit(Guid? id)
         {
@@ -117,7 +187,12 @@ namespace WebForum.Controllers
         // GET: Post/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            Post post = db.Posts.Find(id);
+            if (post == null)
+                return HttpNotFound();
+            return View(post);
         }
 
         // POST: Post/Delete/5
@@ -126,9 +201,19 @@ namespace WebForum.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                Post post = new Post();
+                if (ModelState.IsValid)
+                {
+                    if (id == null)
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    post = db.Posts.Find(id);
+                    if (post == null)
+                        return HttpNotFound();
+                    db.Posts.Remove(post);
+                    db.SaveChanges();
+                    return RedirectToAction("UserPost");
+                }
+                return View(post);
             }
             catch
             {
