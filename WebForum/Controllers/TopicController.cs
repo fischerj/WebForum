@@ -21,8 +21,6 @@ namespace WebForum.Controllers
         // GET: Topic
         public ActionResult Index()
         {
-            
-            Session["foo"] = "bar";
             try
             {
                 return View(db.Topics.ToList());

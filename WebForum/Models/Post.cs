@@ -48,6 +48,9 @@ namespace WebForum.Models
         public Guid? UserId { get; set; }
 
         public string Description { get; set; }
+
+        public virtual ICollection<Topic> Topics { get; set; }
+
         /* 
         Properties to properly navigate through the models. 
         Will be used to display a topic name from a post-TopicId
