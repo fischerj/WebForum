@@ -13,6 +13,7 @@ using WebForum.Models;
 
 namespace WebForum.Controllers
 {
+    [Authorize]
     public class PostController : Controller
     {
         readonly TopicContext tdb = new TopicContext();
@@ -20,6 +21,7 @@ namespace WebForum.Controllers
 
         // GET: Post
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Index(Guid? TopicId)
         {
 
@@ -53,6 +55,7 @@ namespace WebForum.Controllers
         }
 
         // GET: Post/Details/5
+        [Authorize]
         public ActionResult Display(Guid id)
         {
             Post post = db.Posts.Find(id);
@@ -61,6 +64,7 @@ namespace WebForum.Controllers
 
         // GET: Post/Create
         [HttpGet]
+        [Authorize]
         public ActionResult Create(Guid? TopicId)
         {
             ViewBag.HasTopicId = false;
@@ -78,6 +82,7 @@ namespace WebForum.Controllers
 
         // POST: Post/Create
         [HttpPost]
+        [Authorize]
         public ActionResult Create(Post post, Guid? TopicId, string selectedTopicId)
         {
             ViewBag.HasTopicId = false;
@@ -117,6 +122,7 @@ namespace WebForum.Controllers
         }
         // GET
         [HttpGet]
+        [Authorize]
         public ActionResult UserPost(Guid? TopicId)
         {
             try
@@ -153,6 +159,7 @@ namespace WebForum.Controllers
             return RedirectToAction("Index");
         }
         // GET: Post/Edit/5
+        [Authorize]
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -166,6 +173,7 @@ namespace WebForum.Controllers
 
         // POST: Post/Edit/5
         [HttpPost]
+        [Authorize]
         public ActionResult Edit(Post post)
         {
             try
@@ -185,7 +193,8 @@ namespace WebForum.Controllers
         }
 
         // GET: Post/Delete/5
-        public ActionResult Delete(int id)
+        [Authorize]
+        public ActionResult Delete(int? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -197,7 +206,8 @@ namespace WebForum.Controllers
 
         // POST: Post/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [Authorize]
+        public ActionResult Delete(int? id, FormCollection collection)
         {
             try
             {

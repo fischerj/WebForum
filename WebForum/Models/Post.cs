@@ -24,12 +24,12 @@ namespace WebForum.Models
         [ScaffoldColumn(false)]
         public int Version { get; set; }
 
-        [BindNever]
+        [BindNever]                           
         [ScaffoldColumn(false)]
         public DateTime LastUpdated { get; set; }
-
+                                               
         [BindNever]
-        [ScaffoldColumn(false)]
+        [ScaffoldColumn(false)]              
         public bool Deleted { get; set; }
 
         [BindNever]

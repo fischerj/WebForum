@@ -19,6 +19,7 @@ namespace WebForum.Controllers
 
         private TopicContext db = new TopicContext();
         // GET: Topic
+        [AllowAnonymous]
         public ActionResult Index()
         {
             try
@@ -29,10 +30,11 @@ namespace WebForum.Controllers
             {
 
                 return View(db.Topics.ToList());
-            }
+            }   
         }
 
         // GET: Topic/Details/5
+        [AllowAnonymous]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -45,6 +47,7 @@ namespace WebForum.Controllers
 
         // GET: Topic/Create
         [HttpGet]
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -52,38 +55,42 @@ namespace WebForum.Controllers
 
         // POST: Topic/Create
         [HttpPost]
+        [Authorize]
         public ActionResult Create(Topic topic)
         {
             try
             {
                 if (ModelState.IsValid)
-                {
+                {  
                     db.Topics.Add(topic);
                     db.SaveChanges();
                     return RedirectToAction("Index");
-                }
+                }  
                 return View(topic);
-            }
-            catch
-            {
+            }      
+            catch  
+            {      
                 return View();
-            }
-        }
-
+            }      
+        }          
+                   
         // GET: Topic/Edit/5
+        [HttpGet]
+        [Authorize]
         public ActionResult Edit(Guid? id)
-        {
+        {          
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
+                   
             Topic topic = db.Topics.Find(id);
             if (topic == null)
                 return HttpNotFound();
             return View(topic);
-        }
-
+        }          
+                   
         // POST: Topic/Edit/5
-        [HttpPost]
+        [HttpPost] 
+        [Authorize]
         public ActionResult Edit(Topic topic)
         {
             try
@@ -103,6 +110,8 @@ namespace WebForum.Controllers
         }
 
         // GET: Topic/Delete/5
+        [HttpGet]
+        [Authorize]
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -115,21 +124,22 @@ namespace WebForum.Controllers
 
         // POST: Topic/Delete/5
         [HttpPost]
+        [Authorize]
         public ActionResult Delete(Guid? id, Topic top)
         {
             try
-            {
+            {   
                 Topic topic = new Topic();
                 if (ModelState.IsValid)
                 {
-                    if (id == null)
-                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                    topic = db.Topics.Find(id);
-                    if (topic == null)
-                        return HttpNotFound();
-                    db.Topics.Remove(topic);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                        if (id == null)
+                            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                        topic = db.Topics.Find(id);
+                        if (topic == null)
+                            return HttpNotFound();
+                        db.Topics.Remove(topic);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
                 }
                 return View(topic);
             }

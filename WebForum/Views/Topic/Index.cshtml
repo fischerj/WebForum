@@ -17,18 +17,38 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
-            @Html.ActionLink("Details", "Details", new {id = item.Id}) |
-            @Html.ActionLink("Delete", "Delete", new {id = item.Id}) |
-            @Html.ActionLink("Post Create", "Create", "Post", new {TopicId = item.Id}, null) |
-            @Html.ActionLink("Post List", "Index", "Post", new {TopicId = item.Id}, null)
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                @Html.ActionLink("Details", "Details", new {id = item.Id}) |
+                @Html.ActionLink("Delete", "Delete", new {id = item.Id}) |
+                @Html.ActionLink("Post Create", "Create", "Post", new {TopicId = item.Id}, null) |
+                @Html.ActionLink("Post List", "Index", "Post", new {TopicId = item.Id}, null)
+                <button type="button">Button</button>
+            </td>
+        </tr>
+    }
+    @* 
+    Working on some JQuery to get data to move back and forth from pages easier.
+     *@
 </table>
+@section Scripts {
+    <script>
+        
+        $(document).ready(function ($){
+
+            var url ='@Url.Action("Index", "Post")';
+            $('button').click(function() {
+                var row = $(this).closest('tr');
+                var actionId = row.find('select').val();
+                window.location.href = url + '?TopicId=' + '&action=' + actionId;
+    
+            });
+        });
+    </script>
+}
