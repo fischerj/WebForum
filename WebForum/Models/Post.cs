@@ -16,7 +16,7 @@ namespace WebForum.Models
         
         [Key]
         public Guid Id { get; set; }
-
+// Comment
         [DisplayName("Title")]
         public string Name { get; set; }
 
